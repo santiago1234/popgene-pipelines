@@ -1,0 +1,38 @@
+configfile: "config.yaml"
+
+PATH_TO_Q_FILES = config["path_to_q_files"]
+NAMEPREFIX = config["nameprefix"]
+POPINFO = config["popinfo"]
+SAMPLE_ORDER = config["sample_order"]
+COVARIATE = config["covariate"]
+SAMPLE_ID_COL = config["sample_id_col"]
+
+rule all:
+    input:
+        'file_map.txt',
+        'ind2pop.txt',
+        'pop_order.txt'
+
+rule make_file_map:
+    output:
+        'file_map.txt'
+    shell:
+        '''
+        python make-pong-file-map.py {PATH_TO_Q_FILES} {NAMEPREFIX} {output}
+        '''
+
+rule make_population_labels:
+    input:
+        popinfo=POPINFO,
+        sample_order=SAMPLE_ORDER
+    output:
+        ind2pop='ind2pop.txt',
+        pop_order='pop_order.txt'
+    params:
+        covariate=COVARIATE,
+        sample_id_col=SAMPLE_ID_COL
+    shell:
+        '''
+        python ind2pop.py {input.popinfo} {input.sample_order} {params.covariate} {params.sample_id_col}
+        '''
+
