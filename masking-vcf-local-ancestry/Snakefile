@@ -1,0 +1,45 @@
+N_INTERVALS = 10
+INTERVALS_IDS = list(range(1, N_INTERVALS + 1))
+
+# O correpsonds to the Indigenous ancestry
+# to check this run: cat lai-22/query_results.msp|head -n1
+ANC = 0
+N_SPLITS = 10
+
+rule all:
+    input:
+        'res/mask_10.vcf.gz'
+
+
+rule split_vcf:
+    input:
+        vcf = 'data/query-file.vcf.gz',
+        index = 'data/query-file.vcf.gz.tbi'
+    output:
+        expand('test/query_{index}.vcf.gz', index=range(1, N_SPLITS + 1))
+    params:
+        out_prefix = 'test/query'
+    shell:
+        """
+        python scripts/vcf_sipliter.py \
+            --vcf_file {input.vcf} \
+            --out_file_prefix {params.out_prefix} \
+            --n_split {N_SPLITS}
+        """
+
+rule mask:
+    input:
+        vcf = 'test/query_{index}.vcf.gz',
+        msp = 'data/query_results.msp'
+    output:
+        'res/mask_{index}.vcf.gz'
+    shell:
+        '''
+        python scripts/mask_ancestry.py \
+            {ANC} \
+            {input.vcf} \
+            {input.msp} \
+            {output}
+        '''
+        
+
