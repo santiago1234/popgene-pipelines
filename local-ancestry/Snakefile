@@ -1,0 +1,10 @@
+configfile: "config/config.yaml"
+
+SCRATCH = config['scratch']
+
+rule all:
+    input:
+         "train_1.txt",
+
+include: "rules/prepare_data.smk"
+include: "rules/local_ancestry.smk"
