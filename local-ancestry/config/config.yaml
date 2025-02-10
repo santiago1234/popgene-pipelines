@@ -1,0 +1,8 @@
+gnomix_config: "config/whole_genomes.yaml"
+scratch: "/data/scratch/smedina-scratch/250127-LAI"
+# sample_map_file should match this format: https://github.com/AI-sandbox/gnomix/blob/main/demo/data/1000g.smap
+sample_map_file: "/data/users/smedina/proyectos/MxGentreesDemography/data/raw/25-01-16-LocalAncestry/data/reference-panel.txt"
+query_samples: "/data/users/smedina/proyectos/MxGentreesDemography/data/raw/25-01-16-LocalAncestry/data/query_samples.txt"
+vcf: "/data/data_vault/smedina/data/genome-asia/2412-GenomeAsiaFreeze3/vcf-phased/mxb.chr{chrn}.vcf.gz"
+genetic_map: "/data/data_vault/smedina/data/common-resources/genetic_maps/beagle/plink.chr{chrn}.GRCh38.withchrprefix.map" # the genetic map
+phase: True
