@@ -6,3 +6,4 @@ query_samples: "/data/users/smedina/proyectos/MxGentreesDemography/data/raw/25-0
 vcf: "/data/data_vault/smedina/data/genome-asia/2412-GenomeAsiaFreeze3/vcf-phased/mxb.chr{chrn}.vcf.gz"
 genetic_map: "/data/data_vault/smedina/data/common-resources/genetic_maps/beagle/plink.chr{chrn}.GRCh38.withchrprefix.map" # the genetic map
 phase: True
+resulstdir: "/data/data_vault/smedina/results/MxGentreesDemography/250210-LocalAncestryFreeze3"

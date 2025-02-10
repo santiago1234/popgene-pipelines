@@ -1,10 +1,12 @@
 configfile: "config/config.yaml"
 
 SCRATCH = config['scratch']
+RESULTS = config['resulstdir']
 
 rule all:
     input:
-         "train_1.txt",
+        "logs/train_22.log"
+        f"{RESULTS}/query_phased_chr22.vcf.gz",
 
 include: "rules/prepare_data.smk"
 include: "rules/local_ancestry.smk"
