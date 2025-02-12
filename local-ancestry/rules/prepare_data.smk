@@ -13,12 +13,47 @@ rule ref_samples:
         """
 
 
-rule query_vcf:
+rule freeze_samples:
+    """
+    Extract a vcf containing samples in query and ref
+    """
+    input:
+        config['query_samples'],
+        f'{SCRATCH}/ref-samples.txt'
+    output:
+        f"{SCRATCH}/freeze_samples.txt"
+    shell:
+        """
+        cat {input} | sort | uniq >>{output}
+        """
+
+rule freeze_vcf:
+    """
+    VCF containing both query and ref samples
+    """
     input:
         vcf = config['vcf'],
+        samples = f"{SCRATCH}/freeze_samples.txt"
+    output:
+        f"{SCRATCH}/vcf/freeze_chr{{chrn}}.vcf.gz"
+    params:
+        mac = MAC
+    shell:
+        """
+        if [[ {params.mac} -eq 0 ]]; then
+            bcftools view -S {input.samples} {input.vcf} -Oz -o {output}
+        else
+            bcftools view -c{params.mac} -S {input.samples} {input.vcf} -Oz -o {output}
+        fi
+        """
+        
+
+rule query_vcf:
+    input:
+        vcf = f"{SCRATCH}/vcf/freeze_chr{{chrn}}.vcf.gz",
         samples = config['query_samples']
     output:
-        f'{SCRATCH}/vcf/query_chr{{chrn}}.vcf.gz'
+        f"{SCRATCH}/vcf/query_chr{{chrn}}.vcf.gz"
     shell:
         """
         bcftools view -S {input.samples} {input.vcf} -Oz -o {output}
@@ -27,10 +62,10 @@ rule query_vcf:
 
 rule ref_vcf:
     input:
-        vcf = config['vcf'],
+        vcf = f"{SCRATCH}/vcf/freeze_chr{{chrn}}.vcf.gz",
         samples = f'{SCRATCH}/ref-samples.txt'
     output:
-        f'{SCRATCH}/vcf/reference_chr{{chrn}}.vcf.gz'
+        f"{SCRATCH}/vcf/reference_chr{{chrn}}.vcf.gz"
     shell:
         """
         bcftools view -S {input.samples} {input.vcf} -Oz -o {output}

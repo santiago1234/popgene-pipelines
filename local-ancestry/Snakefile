@@ -2,11 +2,14 @@ configfile: "config/config.yaml"
 
 SCRATCH = config['scratch']
 RESULTS = config['resulstdir']
+MAC = config['mac']
+CHROMS = list(range(21, 23))
+
 
 rule all:
     input:
-        "logs/train_22.log"
-        f"{RESULTS}/query_phased_chr22.vcf.gz",
+        f'{RESULTS}/predictions_bed'
+
 
 include: "rules/prepare_data.smk"
 include: "rules/local_ancestry.smk"
